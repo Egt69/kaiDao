@@ -3,11 +3,10 @@
 import Link from "next/link";
 import { AddressChip } from "@/components/address-chip";
 import { Amount } from "@/components/amount";
-import { useAppConfig } from "@/components/app-config";
 import { Countdown } from "@/components/countdown";
 import { StatusBadge } from "@/components/status-badge";
 import { useWallet } from "@/components/wallet-provider";
-import { Failure, Field, LinkButton, Loading, Notice, Panel, Stat } from "@/components/ui";
+import { Failure, LinkButton, Loading, Notice, Panel, Stat } from "@/components/ui";
 import { accountDtoSchema, overviewDtoSchema, proposalListDtoSchema } from "@/lib/api-schemas";
 import { formatRtm } from "@/lib/amount";
 import { safeUrl } from "@/lib/safe-url";
@@ -15,7 +14,6 @@ import { useApi } from "@/lib/use-api";
 
 export default function DashboardPage() {
   const { address, state, connect } = useWallet();
-  const app = useAppConfig();
   const connected = state.status === "connected" && address !== null;
 
   const overview = useApi("/api/dao/overview", overviewDtoSchema);
@@ -42,7 +40,7 @@ export default function DashboardPage() {
     );
   }
 
-  const { config, contract, health, codeHashMatches, configProblem } = overview.data;
+  const { config, codeHashMatches, configProblem } = overview.data;
   const mine = account.data;
 
   return (
@@ -239,32 +237,6 @@ export default function DashboardPage() {
           </Panel>
         </div>
       </div>
-
-      <Panel title="Contract">
-        <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Id">
-            <span className="mono break-all text-xs">{contract.contractId}</span>
-          </Field>
-          <Field label="Code hash">
-            <span className="mono break-all text-xs">{contract.codeHash}</span>
-            <span
-              className={`mt-1.5 inline-flex rounded-full border px-2 py-0.5 text-[11px] ${
-                codeHashMatches
-                  ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                  : "border-red-500/40 bg-red-500/10 text-red-300"
-              }`}
-            >
-              {codeHashMatches ? "verified" : "mismatch"}
-            </span>
-          </Field>
-          <Field label="Type">
-            {contract.type} · weight {contract.weight ?? "?"}
-          </Field>
-          <Field label="Network">
-            {health.status} · tick <span className="mono">{health.tick}</span> · chain {app.chainId}
-          </Field>
-        </div>
-      </Panel>
     </div>
   );
 }

@@ -1,14 +1,11 @@
 "use client";
 
-import { AddressChip } from "@/components/address-chip";
 import { Amount } from "@/components/amount";
-import { useAppConfig } from "@/components/app-config";
 import { Failure, Field, Loading, Notice, Panel, Stat } from "@/components/ui";
 import { overviewDtoSchema } from "@/lib/api-schemas";
 import { useApi } from "@/lib/use-api";
 
 export default function ParametersPage() {
-  const app = useAppConfig();
   const overview = useApi("/api/dao/overview", overviewDtoSchema, { intervalMs: 15_000 });
 
   if (overview.loading && !overview.data) return <Loading what="the rules" />;
@@ -16,7 +13,7 @@ export default function ParametersPage() {
     return <Failure message={overview.failure?.message ?? "The rules could not be read."} />;
   }
 
-  const { config, contract, codeHashMatches, configProblem } = overview.data;
+  const { config, codeHashMatches, configProblem } = overview.data;
 
   if (config === null) {
     return (
@@ -26,12 +23,6 @@ export default function ParametersPage() {
           Not initialized yet: <span className="mono">{configProblem ?? "config was refused"}</span>
           .
         </Notice>
-        <ContractIdentity
-          id={contract.contractId}
-          codeHash={contract.codeHash}
-          matches={codeHashMatches}
-          type={`${contract.type} ${contract.version}`}
-        />
       </div>
     );
   }
@@ -144,66 +135,7 @@ export default function ParametersPage() {
           ))}
         </ul>
       </Panel>
-
-      <ContractIdentity
-        id={contract.contractId}
-        codeHash={contract.codeHash}
-        matches={codeHashMatches}
-        type={`${contract.type} ${contract.version} · weight ${contract.weight ?? "?"}`}
-        deployer={contract.deployer}
-        traits={contract.traits}
-      />
-
-      <p className="text-xs text-zinc-600">
-        Check the binary yourself:{" "}
-        <span className="mono break-all">retium verify {app.contractId} stake_dao.wasm</span>
-      </p>
     </div>
-  );
-}
-
-function ContractIdentity({
-  id,
-  codeHash,
-  matches,
-  type,
-  deployer,
-  traits,
-}: {
-  id: string;
-  codeHash: string;
-  matches: boolean;
-  type: string;
-  deployer?: string;
-  traits?: string[];
-}) {
-  return (
-    <Panel title="Contract">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Id">
-          <span className="mono break-all text-xs">{id}</span>
-        </Field>
-        <Field label="Code hash">
-          <span className="mono break-all text-xs">{codeHash}</span>
-          <span
-            className={`mt-1.5 inline-flex whitespace-nowrap rounded-full border px-2 py-0.5 text-[11px] ${
-              matches
-                ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-300"
-                : "border-red-500/40 bg-red-500/10 text-red-300"
-            }`}
-          >
-            {matches ? "verified" : "mismatch"}
-          </span>
-        </Field>
-        <Field label="Type">{type}</Field>
-        {deployer ? (
-          <Field label="Deployer">
-            <AddressChip address={deployer} short />
-          </Field>
-        ) : null}
-        {traits && traits.length > 0 ? <Field label="Traits">{traits.join(", ")}</Field> : null}
-      </div>
-    </Panel>
   );
 }
 

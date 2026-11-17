@@ -60,17 +60,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               </header>
 
               <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-10">{children}</main>
-
-              <footer className="border-t border-white/10 px-4 py-6">
-                <div className="mx-auto flex max-w-6xl flex-col gap-1.5 text-[11px] text-zinc-600">
-                  <p>
-                    KaiDAO on the Retium public testnet (chain {EXPECTED_CHAIN_ID}). Coins here have
-                    no value.
-                  </p>
-                  <p className="mono break-all">contract {env.RETIUM_CONTRACT_ID}</p>
-                  <p className="mono break-all">code hash {env.RETIUM_CONTRACT_CODE_HASH}</p>
-                </div>
-              </footer>
             </div>
           </WalletProvider>
         </AppConfigProvider>
