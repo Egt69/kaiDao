@@ -1,0 +1,10 @@
+.next
+node_modules
+out
+public
+README.md
+package-lock.json
+next-env.d.ts
+tsconfig.tsbuildinfo
+# Deliberately unsafe and deliberately formatted files used by the guard's tests.
+tests/fixtures

@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/*
+ * KaiDAO palette. The logo is black with a single orange accent, so the page is
+ * black with one accent colour and no gradients behind text.
+ */
+@theme {
+  --color-kai: #ff6a00;
+  --color-kai-soft: #ff8f3d;
+  --color-kai-deep: #b34700;
+  --color-ink: #030303;
+  --color-panel: #0a0a0a;
+  --color-panel-soft: #101010;
+  --color-line: #1f1f1f;
+  --color-line-soft: #171717;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: #f4f4f5;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+}
+
+/* A single hairline of the accent at the very top, as on the logo. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-kai), #531f00 55%, transparent);
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* Addresses and hashes are easier to compare character by character in a
+   monospace face; a proportional font hides look-alike characters. */
+.mono {
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  font-variant-ligatures: none;
+}
+
+::selection {
+  background-color: var(--color-kai);
+  color: #000000;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-kai);
+  outline-offset: 2px;
+}
