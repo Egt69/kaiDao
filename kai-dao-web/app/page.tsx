@@ -44,16 +44,18 @@ export default function DashboardPage() {
   const mine = account.data;
 
   return (
-    <div className="space-y-6">
-      <section className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent p-6 sm:p-8">
-        <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-kai">
-          Stake-weighted DAO
-        </p>
-        <h1 className="mt-2 text-4xl font-semibold tracking-tight">KaiDAO</h1>
-        <p className="mt-2 max-w-md text-sm text-zinc-400">
-          Stake RTM to vote. Passed proposals pay from the treasury.
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2.5">
+    <div className="space-y-4">
+      <section className="flex flex-wrap items-end justify-between gap-4 rounded-2xl border border-white/[0.09] bg-gradient-to-r from-white/[0.05] to-transparent p-5 sm:p-6">
+        <div>
+          <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-kai">
+            Stake-weighted DAO
+          </p>
+          <h1 className="mt-1.5 text-3xl font-semibold tracking-tight">KaiDAO</h1>
+          <p className="mt-1 text-sm text-zinc-400">
+            Stake RTM to vote. Passed proposals pay from the treasury.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2.5">
           <LinkButton href="/stake">Stake RTM</LinkButton>
           <LinkButton href="/proposals" variant="secondary">
             See proposals
@@ -141,20 +143,48 @@ export default function DashboardPage() {
                       <span>to</span>
                       <AddressChip address={proposal.recipient} short copy={false} />
                     </p>
-                    <div className="mt-auto pt-3">
-                      <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
-                        <div
-                          className={`h-full rounded-full ${percent >= 100 ? "bg-emerald-400" : "bg-kai"}`}
-                          style={{ width: `${Math.max(percent, 2)}%` }}
-                        />
+                    <div className="mt-auto space-y-2.5 pt-4">
+                      <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-white/[0.06] bg-black/25 p-2 text-center">
+                        {(["yes", "no", "abstain"] as const).map((choice) => {
+                          const raw =
+                            choice === "yes"
+                              ? proposal.yesAtomic
+                              : choice === "no"
+                                ? proposal.noAtomic
+                                : proposal.abstainAtomic;
+                          const color =
+                            choice === "yes"
+                              ? "text-emerald-300"
+                              : choice === "no"
+                                ? "text-red-300"
+                                : "text-zinc-300";
+                          return (
+                            <div key={choice}>
+                              <p className="text-[9px] uppercase tracking-wide text-zinc-600">
+                                {choice}
+                              </p>
+                              <p className={`mt-0.5 text-[11px] font-medium ${color}`}>
+                                {formatRtm(raw)}
+                              </p>
+                            </div>
+                          );
+                        })}
                       </div>
-                      <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-zinc-600">
-                        <span>Quorum {Math.round(percent)}%</span>
-                        <span className="mono">
-                          {formatRtm(participation)} / {formatRtm(quorum)} RTM
-                        </span>
+                      <div>
+                        <div className="flex items-center justify-between gap-2 text-[10px] text-zinc-600">
+                          <span>Quorum {Math.round(percent)}%</span>
+                          <span className="mono">
+                            {formatRtm(participation)} / {formatRtm(quorum)} RTM
+                          </span>
+                        </div>
+                        <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/[0.06]">
+                          <div
+                            className={`h-full rounded-full ${percent >= 100 ? "bg-emerald-400" : "bg-kai"}`}
+                            style={{ width: `${Math.max(percent, 2)}%` }}
+                          />
+                        </div>
                       </div>
-                      <div className="mt-2 text-right text-[11px] text-zinc-500 group-hover:text-kai">
+                      <div className="text-right text-[11px] text-zinc-500 group-hover:text-kai">
                         {proposal.status === "active" ? (
                           <Countdown
                             deadline={proposal.votingEnds}
