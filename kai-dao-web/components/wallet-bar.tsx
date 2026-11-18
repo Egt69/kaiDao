@@ -12,7 +12,8 @@ export function WalletBar() {
   return (
     <div className="flex flex-col items-start gap-1 sm:items-end">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="hidden rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-zinc-500 sm:inline">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-zinc-400">
+          <span className="h-1.5 w-1.5 rounded-full bg-kai" />
           testnet
         </span>
 

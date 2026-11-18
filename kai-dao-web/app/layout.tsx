@@ -4,6 +4,7 @@ import "./globals.css";
 import { AppConfigProvider, type PublicConfig } from "@/components/app-config";
 import { Brand } from "@/components/brand";
 import { Nav } from "@/components/nav";
+import { Sidebar } from "@/components/sidebar";
 import { WalletProvider } from "@/components/wallet-provider";
 import { WalletBar } from "@/components/wallet-bar";
 import { env, EXPECTED_CHAIN_ID, WALLET_SDK_URL } from "@/lib/env";
@@ -48,18 +49,25 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="min-h-screen antialiased">
         <AppConfigProvider value={publicConfig}>
           <WalletProvider>
-            <div className="flex min-h-screen flex-col">
-              <header className="sticky top-0 z-40 border-b border-white/10 bg-black/70 backdrop-blur-xl">
-                <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-                  <div className="flex flex-wrap items-center gap-5">
-                    <Brand />
+            <div className="flex min-h-screen">
+              <Sidebar />
+              <div className="flex min-w-0 flex-1 flex-col">
+                <header className="sticky top-0 z-40 border-b border-white/[0.08] bg-black/75 backdrop-blur-xl">
+                  <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+                    <div className="lg:hidden">
+                      <Brand />
+                    </div>
+                    <WalletBar />
+                  </div>
+                  <div className="border-t border-white/[0.06] px-4 py-2 lg:hidden">
                     <Nav />
                   </div>
-                  <WalletBar />
-                </div>
-              </header>
+                </header>
 
-              <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:py-10">{children}</main>
+                <main className="mx-auto w-full max-w-[1500px] flex-1 px-4 py-6 sm:px-7 sm:py-7">
+                  {children}
+                </main>
+              </div>
             </div>
           </WalletProvider>
         </AppConfigProvider>

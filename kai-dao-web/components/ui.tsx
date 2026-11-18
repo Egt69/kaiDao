@@ -7,18 +7,27 @@ export function Panel({
   description,
   children,
   actions,
+  icon,
 }: {
   title: string;
   description?: string;
   children: ReactNode;
   actions?: ReactNode;
+  icon?: ReactNode;
 }) {
   return (
     <section className="rounded-2xl border border-white/[0.09] bg-white/[0.02]">
       <header className="flex flex-wrap items-center justify-between gap-2 px-5 pb-3 pt-4">
-        <div>
-          <h2 className="text-sm font-semibold text-zinc-100">{title}</h2>
-          {description ? <p className="mt-0.5 text-xs text-zinc-500">{description}</p> : null}
+        <div className="flex items-center gap-2.5">
+          {icon ? (
+            <span className="text-kai">{icon}</span>
+          ) : (
+            <span className="h-4 w-1 rounded-full bg-kai" />
+          )}
+          <div>
+            <h2 className="text-sm font-semibold text-zinc-100">{title}</h2>
+            {description ? <p className="mt-0.5 text-xs text-zinc-500">{description}</p> : null}
+          </div>
         </div>
         {actions}
       </header>
@@ -40,16 +49,22 @@ export function Stat({
   label,
   hint,
   children,
+  icon,
 }: {
   label: string;
   hint?: string;
   children: ReactNode;
+  icon?: ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-white/[0.09] bg-white/[0.02] px-5 py-4">
-      <p className="text-[11px] uppercase tracking-wide text-zinc-500">{label}</p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-zinc-50">{children}</p>
-      {hint ? <p className="mt-1 text-[11px] text-zinc-600">{hint}</p> : null}
+    <div className="relative overflow-hidden rounded-2xl border border-white/[0.09] bg-white/[0.02] px-5 py-4">
+      <div className="pointer-events-none absolute -bottom-12 right-0 h-24 w-32 rounded-full bg-kai/[0.06] blur-2xl" />
+      <div className="relative flex items-center gap-2">
+        {icon ? <span className="text-kai">{icon}</span> : null}
+        <p className="text-[11px] uppercase tracking-wide text-zinc-500">{label}</p>
+      </div>
+      <p className="relative mt-2 text-2xl font-semibold tracking-tight text-zinc-50">{children}</p>
+      {hint ? <p className="relative mt-1 text-[11px] text-zinc-600">{hint}</p> : null}
     </div>
   );
 }

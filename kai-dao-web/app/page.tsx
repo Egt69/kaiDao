@@ -45,21 +45,35 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-4">
-      <section className="flex flex-wrap items-end justify-between gap-4 rounded-2xl border border-white/[0.09] bg-gradient-to-r from-white/[0.05] to-transparent p-5 sm:p-6">
-        <div>
+      <section className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-[linear-gradient(115deg,#0d0906_0%,#180d07_42%,#2c1406_76%,#110b07_100%)] px-6 py-8 sm:px-9 sm:py-10">
+        <div className="pointer-events-none absolute -right-24 -top-32 h-80 w-[560px] rotate-[-22deg] bg-gradient-to-l from-kai/25 via-kai/[0.06] to-transparent blur-3xl" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 sm:block">
+          <div className="absolute right-[9%] top-1/2 h-52 w-52 -translate-y-1/2 rotate-12 rounded-[3rem] bg-kai/10 blur-3xl" />
+          <svg
+            viewBox="0 0 120 120"
+            className="absolute right-[7%] top-1/2 h-48 w-48 -translate-y-1/2 text-kai/70"
+            fill="currentColor"
+          >
+            <path d="M18 12h30v33l29-33h40L86 52l34 56H76L53 72v36H18z" />
+          </svg>
+        </div>
+        <div className="relative max-w-xl">
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-kai">
             Stake-weighted DAO
           </p>
-          <h1 className="mt-1.5 text-3xl font-semibold tracking-tight">KaiDAO</h1>
-          <p className="mt-1 text-sm text-zinc-400">
+          <h1 className="mt-1.5 text-5xl font-bold tracking-tight sm:text-6xl">
+            <span className="text-zinc-50">Kai</span>
+            <span className="text-kai">DAO</span>
+          </h1>
+          <p className="mt-2 text-sm text-zinc-400">
             Stake RTM to vote. Passed proposals pay from the treasury.
           </p>
-        </div>
-        <div className="flex flex-wrap gap-2.5">
-          <LinkButton href="/stake">Stake RTM</LinkButton>
-          <LinkButton href="/proposals" variant="secondary">
-            See proposals
-          </LinkButton>
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            <LinkButton href="/stake">Stake RTM →</LinkButton>
+            <LinkButton href="/proposals" variant="secondary">
+              See proposals
+            </LinkButton>
+          </div>
         </div>
       </section>
 
@@ -78,26 +92,85 @@ export default function DashboardPage() {
       ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat label="Total staked" hint="locked in governance">
+        <Stat
+          label="Total staked"
+          hint="locked in governance"
+          icon={
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-5 w-5"
+            >
+              <circle cx="9" cy="8" r="3" />
+              <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c1.8.8 3 2.5 3 4.5" />
+            </svg>
+          }
+        >
           {config ? <Amount atomic={config.totalStakedAtomic} /> : "—"}
         </Stat>
-        <Stat label="Treasury" hint="spendable by vote only">
+        <Stat
+          label="Treasury"
+          hint="spendable by vote only"
+          icon={
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-5 w-5"
+            >
+              <rect x="3" y="6" width="18" height="13" rx="2.5" />
+              <path d="M3 10h18M16 15h2" />
+            </svg>
+          }
+        >
           {config ? <Amount atomic={config.treasuryAtomic} /> : "—"}
         </Stat>
-        <Stat label="Proposals" hint="all time">
+        <Stat
+          label="Proposals"
+          hint="all time"
+          icon={
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-5 w-5"
+            >
+              <path d="M6 3h9l4 4v14H6z" />
+              <path d="M14 3v5h5M9 12h7M9 16h7" />
+            </svg>
+          }
+        >
           {config ? config.proposalCount : "—"}
         </Stat>
-        <Stat label="Your power" hint={connected ? "stake plus delegated" : "connect to see it"}>
+        <Stat
+          label="Your power"
+          hint={connected ? "stake plus delegated" : "connect to see it"}
+          icon={
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              className="h-5 w-5"
+            >
+              <path d="M13 2 4 14h7l-1 8 9-12h-7z" />
+            </svg>
+          }
+        >
           {connected ? mine ? <Amount atomic={mine.powerAtomic} /> : "…" : "—"}
         </Stat>
       </div>
 
       <div className="grid items-start gap-4 lg:grid-cols-[1.5fr_1fr]">
         <Panel
-          title="Latest proposals"
+          title="Latest Proposals"
           actions={
-            <Link href="/proposals" className="text-xs text-zinc-500 hover:text-kai">
-              All →
+            <Link href="/proposals" className="text-xs font-medium text-kai hover:text-kai-soft">
+              View all →
             </Link>
           }
         >
@@ -120,7 +193,7 @@ export default function DashboardPage() {
                   <Link
                     key={proposal.id}
                     href={safeUrl(`/proposals/${proposal.id}`)}
-                    className="group flex aspect-square flex-col overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 transition-colors hover:border-kai/40 hover:bg-white/[0.045]"
+                    className="group flex min-h-[13.5rem] flex-col rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 transition-colors hover:border-kai/40 hover:bg-white/[0.045]"
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="mono text-[11px] text-zinc-500">#{proposal.id}</span>
@@ -143,63 +216,70 @@ export default function DashboardPage() {
                       <span>to</span>
                       <AddressChip address={proposal.recipient} short copy={false} />
                     </p>
-                    <div className="mt-auto space-y-2.5 pt-4">
-                      <div className="grid grid-cols-3 gap-1.5 rounded-xl border border-white/[0.06] bg-black/25 p-2 text-center">
-                        {(["yes", "no", "abstain"] as const).map((choice) => {
-                          const raw =
-                            choice === "yes"
-                              ? proposal.yesAtomic
-                              : choice === "no"
-                                ? proposal.noAtomic
-                                : proposal.abstainAtomic;
-                          const color =
-                            choice === "yes"
-                              ? "text-emerald-300"
-                              : choice === "no"
-                                ? "text-red-300"
-                                : "text-zinc-300";
-                          return (
-                            <div key={choice}>
-                              <p className="text-[9px] uppercase tracking-wide text-zinc-600">
-                                {choice}
-                              </p>
-                              <p className={`mt-0.5 text-[11px] font-medium ${color}`}>
-                                {formatRtm(raw)}
-                              </p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between gap-2 text-[10px] text-zinc-600">
-                          <span>Quorum {Math.round(percent)}%</span>
-                          <span className="mono">
-                            {formatRtm(participation)} / {formatRtm(quorum)} RTM
-                          </span>
-                        </div>
-                        <div className="mt-1 h-1 overflow-hidden rounded-full bg-white/[0.06]">
-                          <div
-                            className={`h-full rounded-full ${percent >= 100 ? "bg-emerald-400" : "bg-kai"}`}
-                            style={{ width: `${Math.max(percent, 2)}%` }}
-                          />
+                    <div className="mt-auto pt-4">
+                      <div className="border-t border-white/[0.07] pt-3">
+                        <div className="grid grid-cols-3 gap-2 text-center">
+                          {(["yes", "no", "abstain"] as const).map((choice) => {
+                            const raw =
+                              choice === "yes"
+                                ? proposal.yesAtomic
+                                : choice === "no"
+                                  ? proposal.noAtomic
+                                  : proposal.abstainAtomic;
+                            const color =
+                              choice === "yes"
+                                ? "text-emerald-400"
+                                : choice === "no"
+                                  ? "text-red-400"
+                                  : "text-zinc-400";
+                            return (
+                              <div key={choice}>
+                                <p className="flex items-center justify-center gap-1 text-[10px] uppercase tracking-wide text-zinc-600">
+                                  {choice === "yes" ? (
+                                    <span className="text-emerald-400">✓</span>
+                                  ) : null}
+                                  {choice}
+                                </p>
+                                <p className={`mt-0.5 text-xs font-semibold ${color}`}>
+                                  {formatRtm(raw)}
+                                </p>
+                              </div>
+                            );
+                          })}
                         </div>
                       </div>
-                      <div className="text-right text-[11px] text-zinc-500 group-hover:text-kai">
-                        {proposal.status === "active" ? (
-                          <Countdown
-                            deadline={proposal.votingEnds}
-                            prefix="ends"
-                            showAbsolute={false}
-                          />
-                        ) : proposal.status === "queued" ? (
-                          <Countdown
-                            deadline={proposal.timelockEnds}
-                            prefix="unlocks"
-                            showAbsolute={false}
-                          />
-                        ) : (
-                          "final"
-                        )}
+                      <div className="mt-3 flex items-center justify-between gap-2 text-[11px] text-zinc-500">
+                        <span className="flex items-center gap-1.5 group-hover:text-kai">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.7"
+                            className="h-3.5 w-3.5"
+                          >
+                            <circle cx="12" cy="12" r="9" />
+                            <path d="M12 7v5l3 2" />
+                          </svg>
+                          {proposal.status === "active" ? (
+                            <Countdown
+                              deadline={proposal.votingEnds}
+                              prefix="Ends"
+                              showAbsolute={false}
+                            />
+                          ) : proposal.status === "queued" ? (
+                            <Countdown
+                              deadline={proposal.timelockEnds}
+                              prefix="Unlocks"
+                              showAbsolute={false}
+                            />
+                          ) : (
+                            "final"
+                          )}
+                        </span>
+                        <span className="text-zinc-600">
+                          Quorum {Math.round(percent)}% · {formatRtm(participation)} /{" "}
+                          {formatRtm(quorum)} RTM
+                        </span>
                       </div>
                     </div>
                   </Link>
@@ -222,7 +302,21 @@ export default function DashboardPage() {
         </Panel>
 
         <div className="space-y-4">
-          <Panel title="Your position">
+          <Panel
+            title="Your Position"
+            icon={
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                className="h-5 w-5"
+              >
+                <circle cx="12" cy="8" r="3.5" />
+                <path d="M5 20c0-3.8 3.1-6.5 7-6.5s7 2.7 7 6.5" />
+              </svg>
+            }
+          >
             {!connected ? (
               <div className="space-y-3">
                 <p className="text-sm text-zinc-400">Connect a wallet to see your stake.</p>
@@ -269,7 +363,21 @@ export default function DashboardPage() {
             )}
           </Panel>
 
-          <Panel title="How it works">
+          <Panel
+            title="How it works"
+            icon={
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                className="h-5 w-5"
+              >
+                <path d="M9 18h6M10 21h4" />
+                <path d="M12 3a6 6 0 0 0-3.5 10.9c.6.4.9 1 .9 1.6h5.2c0-.6.3-1.2.9-1.6A6 6 0 0 0 12 3z" />
+              </svg>
+            }
+          >
             <ol className="space-y-2.5 text-sm">
               {[
                 ["01", "Stake", "Lock RTM to get voting power."],
