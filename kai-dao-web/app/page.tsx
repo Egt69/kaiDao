@@ -100,7 +100,7 @@ export default function DashboardPage() {
           }
         >
           {proposals.data && proposals.data.proposals.length > 0 ? (
-            <div className="grid gap-2.5">
+            <div className="grid gap-3 sm:grid-cols-2">
               {proposals.data.proposals.map((proposal) => {
                 const participation =
                   BigInt(proposal.yesAtomic) +
@@ -118,32 +118,43 @@ export default function DashboardPage() {
                   <Link
                     key={proposal.id}
                     href={safeUrl(`/proposals/${proposal.id}`)}
-                    className="group block rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 transition-colors hover:border-kai/40 hover:bg-white/[0.045]"
+                    className="group flex aspect-square flex-col overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 transition-colors hover:border-kai/40 hover:bg-white/[0.045]"
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0">
-                        <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[11px]">
-                          <span className="mono text-zinc-500">#{proposal.id}</span>
-                          <StatusBadge status={proposal.status} />
-                          <span className="text-zinc-700">·</span>
-                          <span className="text-zinc-500">by</span>
-                          <AddressChip address={proposal.proposer} short copy={false} />
-                        </div>
-                        <h3
-                          className="truncate text-sm font-medium text-zinc-100 group-hover:text-kai"
-                          title={proposal.description || undefined}
-                        >
-                          {title}
-                        </h3>
-                        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
-                          <span className="font-medium text-zinc-300">
-                            {formatRtm(proposal.amountAtomic)} RTM
-                          </span>
-                          <span>to</span>
-                          <AddressChip address={proposal.recipient} short copy={false} />
-                        </p>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="mono text-[11px] text-zinc-500">#{proposal.id}</span>
+                      <StatusBadge status={proposal.status} />
+                    </div>
+                    <p className="mt-3 flex items-center gap-1.5 text-[11px] text-zinc-500">
+                      <span>by</span>
+                      <AddressChip address={proposal.proposer} short copy={false} />
+                    </p>
+                    <h3
+                      className="mt-1 line-clamp-2 text-sm font-medium text-zinc-100 group-hover:text-kai"
+                      title={proposal.description || undefined}
+                    >
+                      {title}
+                    </h3>
+                    <p className="mt-1.5 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+                      <span className="font-medium text-zinc-300">
+                        {formatRtm(proposal.amountAtomic)} RTM
+                      </span>
+                      <span>to</span>
+                      <AddressChip address={proposal.recipient} short copy={false} />
+                    </p>
+                    <div className="mt-auto pt-3">
+                      <div className="h-1 overflow-hidden rounded-full bg-white/[0.06]">
+                        <div
+                          className={`h-full rounded-full ${percent >= 100 ? "bg-emerald-400" : "bg-kai"}`}
+                          style={{ width: `${Math.max(percent, 2)}%` }}
+                        />
                       </div>
-                      <span className="shrink-0 text-right text-[11px] text-zinc-500 group-hover:text-kai">
+                      <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-zinc-600">
+                        <span>Quorum {Math.round(percent)}%</span>
+                        <span className="mono">
+                          {formatRtm(participation)} / {formatRtm(quorum)} RTM
+                        </span>
+                      </div>
+                      <div className="mt-2 text-right text-[11px] text-zinc-500 group-hover:text-kai">
                         {proposal.status === "active" ? (
                           <Countdown
                             deadline={proposal.votingEnds}
@@ -159,19 +170,7 @@ export default function DashboardPage() {
                         ) : (
                           "final"
                         )}
-                      </span>
-                    </div>
-                    <div className="mt-3.5 h-1 overflow-hidden rounded-full bg-white/[0.06]">
-                      <div
-                        className={`h-full rounded-full ${percent >= 100 ? "bg-emerald-400" : "bg-kai"}`}
-                        style={{ width: `${Math.max(percent, 2)}%` }}
-                      />
-                    </div>
-                    <div className="mt-1.5 flex items-center justify-between gap-3 text-[10px] text-zinc-600">
-                      <span>Quorum {Math.round(percent)}%</span>
-                      <span className="mono">
-                        {formatRtm(participation)} / {formatRtm(quorum)} RTM
-                      </span>
+                      </div>
                     </div>
                   </Link>
                 );
