@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { AddressChip } from "@/components/address-chip";
 import { Amount } from "@/components/amount";
@@ -49,13 +50,14 @@ export default function DashboardPage() {
         <div className="pointer-events-none absolute -right-24 -top-32 h-80 w-[560px] rotate-[-22deg] bg-gradient-to-l from-kai/25 via-kai/[0.06] to-transparent blur-3xl" />
         <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-1/2 sm:block">
           <div className="absolute right-[9%] top-1/2 h-52 w-52 -translate-y-1/2 rotate-12 rounded-[3rem] bg-kai/10 blur-3xl" />
-          <svg
-            viewBox="0 0 120 120"
-            className="absolute right-[7%] top-1/2 h-48 w-48 -translate-y-1/2 text-kai/70"
-            fill="currentColor"
-          >
-            <path d="M18 12h30v33l29-33h40L86 52l34 56H76L53 72v36H18z" />
-          </svg>
+          <Image
+            src="/kaidao-mark.png"
+            alt=""
+            width={310}
+            height={226}
+            priority
+            className="absolute right-[6%] top-1/2 h-48 w-auto -translate-y-1/2 opacity-90"
+          />
         </div>
         <div className="relative max-w-xl">
           <p className="text-[11px] font-medium uppercase tracking-[0.22em] text-kai">
