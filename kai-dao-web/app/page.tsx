@@ -17,7 +17,7 @@ export default function DashboardPage() {
   const connected = state.status === "connected" && address !== null;
 
   const overview = useApi("/api/dao/overview", overviewDtoSchema);
-  const proposals = useApi("/api/dao/proposals?limit=4", proposalListDtoSchema, {
+  const proposals = useApi("/api/dao/proposals?limit=4&details=1", proposalListDtoSchema, {
     intervalMs: 8_000,
   });
   const account = useApi(
@@ -100,7 +100,7 @@ export default function DashboardPage() {
           }
         >
           {proposals.data && proposals.data.proposals.length > 0 ? (
-            <ul className="-my-2 divide-y divide-white/[0.06]">
+            <div className="grid gap-2.5">
               {proposals.data.proposals.map((proposal) => {
                 const participation =
                   BigInt(proposal.yesAtomic) +
@@ -111,23 +111,39 @@ export default function DashboardPage() {
                   quorum === 0n
                     ? 100
                     : Math.min(100, Number((participation * 10_000n) / quorum) / 100);
+                const title =
+                  proposal.description?.split("\n")[0]?.trim() || `Proposal #${proposal.id}`;
 
                 return (
-                  <li key={proposal.id} className="py-3">
-                    <Link
-                      href={safeUrl(`/proposals/${proposal.id}`)}
-                      className="group flex flex-wrap items-center justify-between gap-2"
-                    >
-                      <span className="flex flex-wrap items-center gap-2 text-sm">
-                        <span className="text-zinc-500">#{proposal.id}</span>
-                        <StatusBadge status={proposal.status} />
-                        <span className="font-medium text-zinc-100">
-                          {formatRtm(proposal.amountAtomic)} RTM
-                        </span>
-                        <span className="text-zinc-500">to</span>
-                        <AddressChip address={proposal.recipient} short copy={false} />
-                      </span>
-                      <span className="text-xs text-zinc-500 group-hover:text-kai">
+                  <Link
+                    key={proposal.id}
+                    href={safeUrl(`/proposals/${proposal.id}`)}
+                    className="group block rounded-2xl border border-white/[0.07] bg-white/[0.02] p-4 transition-colors hover:border-kai/40 hover:bg-white/[0.045]"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <div className="mb-1.5 flex flex-wrap items-center gap-2 text-[11px]">
+                          <span className="mono text-zinc-500">#{proposal.id}</span>
+                          <StatusBadge status={proposal.status} />
+                          <span className="text-zinc-700">·</span>
+                          <span className="text-zinc-500">by</span>
+                          <AddressChip address={proposal.proposer} short copy={false} />
+                        </div>
+                        <h3
+                          className="truncate text-sm font-medium text-zinc-100 group-hover:text-kai"
+                          title={proposal.description || undefined}
+                        >
+                          {title}
+                        </h3>
+                        <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+                          <span className="font-medium text-zinc-300">
+                            {formatRtm(proposal.amountAtomic)} RTM
+                          </span>
+                          <span>to</span>
+                          <AddressChip address={proposal.recipient} short copy={false} />
+                        </p>
+                      </div>
+                      <span className="shrink-0 text-right text-[11px] text-zinc-500 group-hover:text-kai">
                         {proposal.status === "active" ? (
                           <Countdown
                             deadline={proposal.votingEnds}
@@ -144,17 +160,23 @@ export default function DashboardPage() {
                           "final"
                         )}
                       </span>
-                    </Link>
-                    <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/[0.06]">
+                    </div>
+                    <div className="mt-3.5 h-1 overflow-hidden rounded-full bg-white/[0.06]">
                       <div
                         className={`h-full rounded-full ${percent >= 100 ? "bg-emerald-400" : "bg-kai"}`}
                         style={{ width: `${Math.max(percent, 2)}%` }}
                       />
                     </div>
-                  </li>
+                    <div className="mt-1.5 flex items-center justify-between gap-3 text-[10px] text-zinc-600">
+                      <span>Quorum {Math.round(percent)}%</span>
+                      <span className="mono">
+                        {formatRtm(participation)} / {formatRtm(quorum)} RTM
+                      </span>
+                    </div>
+                  </Link>
                 );
               })}
-            </ul>
+            </div>
           ) : proposals.failure ? (
             <Failure message={proposals.failure.message} />
           ) : proposals.data ? (

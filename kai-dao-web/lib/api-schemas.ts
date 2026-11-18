@@ -36,6 +36,7 @@ export const configDtoSchema = z.object({
 
 export const proposalDtoSchema = z.object({
   id: z.number().int().positive(),
+  description: z.string().optional(),
   proposer: address,
   recipient: address,
   amountAtomic: atomic,

@@ -36,6 +36,7 @@ export function toConfigDto(config: DaoConfig): ConfigDto {
 
 export type ProposalDto = {
   id: number;
+  description?: string;
   proposer: string;
   recipient: string;
   amountAtomic: string;
@@ -51,9 +52,10 @@ export type ProposalDto = {
   abstainAtomic: string;
 };
 
-export function toProposalDto(proposal: Proposal): ProposalDto {
+export function toProposalDto(proposal: Proposal & { description?: string }): ProposalDto {
   return {
     id: proposal.id,
+    ...(proposal.description !== undefined ? { description: proposal.description } : {}),
     proposer: proposal.proposer,
     recipient: proposal.recipient,
     amountAtomic: proposal.amountAtomic.toString(),

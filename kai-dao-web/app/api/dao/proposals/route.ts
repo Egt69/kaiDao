@@ -27,7 +27,8 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const result = await listProposals(parsed.data);
+    const withDescriptions = url.searchParams.get("details") === "1";
+    const result = await listProposals(parsed.data, withDescriptions);
 
     const body: ProposalListDto = {
       proposals: result.proposals.map(toProposalDto),

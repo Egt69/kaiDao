@@ -272,8 +272,11 @@ export async function getProposalDetail(id: number): Promise<ProposalDetail> {
   return { proposal, description, voters, votersComplete: !log.truncated };
 }
 
-export async function listProposals(limit = 50): Promise<{
-  proposals: Proposal[];
+export async function listProposals(
+  limit = 50,
+  withDescriptions = false,
+): Promise<{
+  proposals: (Proposal & { description?: string })[];
   total: number;
   shown: number;
   truncated: boolean;
@@ -286,7 +289,12 @@ export async function listProposals(limit = 50): Promise<{
 
   const results = await mapLimit(ids, 4, async (id) => {
     try {
-      return await getProposal(id);
+      if (!withDescriptions) return await getProposal(id);
+      const [proposal, description] = await Promise.all([
+        getProposal(id),
+        getDescription(id).catch(() => ""),
+      ]);
+      return { ...proposal, description };
     } catch (error) {
       if (error instanceof RpcError && error.kind === "refused") return null;
       throw error;
