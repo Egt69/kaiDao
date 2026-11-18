@@ -68,6 +68,7 @@ The same approach as the sibling `dao-web` app, for the same reasons:
 | `/treasury` | Treasury and stake counters, deposits, recent movements |
 | `/activity` | The contract's event log, newest first, with paging |
 | `/parameters` | Every immutable parameter, the security model and its trade-offs |
+| `/about` | How to use the app, its requirements, the fixed rules and the terms of use |
 
 ## Configuration
 
